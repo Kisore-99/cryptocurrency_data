@@ -1,8 +1,8 @@
 const axios= require('axios');
 const { GraphQLJSON, GraphQLJSONObject } = require('graphql-type-json');
 
-const {GraphQLInputObjectType,GraphQLSchema,GraphQLObjectType, GraphQLInt,GraphQLBoolean, GraphQLString,GraphQLList}= require('graphql');
-
+const {GraphQLInputObjectType,GraphQLSchema,GraphQLObjectType, GraphQLInt,GraphQLBoolean, GraphQLString,GraphQLList, GraphQLFloat,GraphQLScalarType}= require('graphql');
+const BigInt = require('graphql-bigint')
 var vs_cur=''
 var id= ''
 
@@ -18,6 +18,15 @@ const Coins_Fetch= new GraphQLObjectType({
      })
 });
 
+const Coins_Price= new GraphQLObjectType({
+    name:'coin_price',
+    fields:()=>({
+        
+        data: {type: GraphQLJSON},
+        
+
+     })
+});
 
 const Coins_Markets= new GraphQLObjectType({
     name:'coin_market',
@@ -27,9 +36,11 @@ const Coins_Markets= new GraphQLObjectType({
         symbol: {type: GraphQLString},
         name:{type: GraphQLString},
         image:{type: GraphQLString},
-        current_price: {type: GraphQLInt},
-        market_cap: {type: GraphQLInt},
-        market_cap_rank: {type: GraphQLInt}
+        current_price: {type: GraphQLFloat},
+        market_cap: {type: BigInt},
+        market_cap_rank: {type: GraphQLInt},
+        image: {type: GraphQLJSON},
+       
 
      })
 });
@@ -50,6 +61,23 @@ const RootQuery= new GraphQLObjectType({
                     }
 
                 },
+
+
+                coin_price:{
+                    type: Coins_Price,
+                    args: {
+                        vs_cur: {type:GraphQLString},
+                        id: {type:GraphQLString}
+                    },
+                
+                        resolve(parent,args){
+                            return axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${args.id}&vs_currencies=${args.vs_cur}`)    
+                            res1=res.data.args.id
+                            .then(res1);   
+                        }
+    
+                    },
+    
 
    
                 coin_market:{

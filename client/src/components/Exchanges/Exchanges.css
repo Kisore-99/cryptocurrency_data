@@ -1,0 +1,9 @@
+.exchange-container{
+    display: flex;
+}
+
+.title{
+    position: absolute;
+    margin-top: 15rem;
+    left: 40px;
+}
